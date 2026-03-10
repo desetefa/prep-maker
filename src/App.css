@@ -1,0 +1,292 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.format-label {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0 0 1.5rem 0;
+}
+
+.drop-zone {
+  width: 100%;
+  max-width: 360px;
+  min-height: 180px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background-color 0.2s;
+  cursor: default;
+}
+
+.drop-zone.drag-over {
+  border-color: #396cd8;
+  background-color: rgba(57, 108, 216, 0.08);
+}
+
+.drop-zone.processing {
+  border-color: #888;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.drop-zone.success {
+  border-color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.08);
+}
+
+.drop-zone.error {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+.drop-message {
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.drop-zone.drag-over .drop-message {
+  color: #396cd8;
+}
+
+.drop-zone.success .drop-message {
+  color: #22c55e;
+}
+
+.drop-zone.error .drop-message {
+  color: #ef4444;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #888;
+  margin: 1rem 0 0 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.modal-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 1rem 0;
+}
+
+.meta-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meta-row label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.meta-row input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.speaker-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.speaker-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.speaker-row .speaker-label {
+  min-width: 5rem;
+  font-size: 0.9rem;
+}
+
+.speaker-row input[type="text"] {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.speaker-row input[type="text"]:disabled {
+  opacity: 0.6;
+  background: #eee;
+}
+
+.remove-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #666;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+}
+
+.modal-actions button:last-child {
+  background: #396cd8;
+  color: #fff;
+  border-color: #396cd8;
+}
+
+.modal-actions button:last-child:hover {
+  background: #2d5bc7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #1a1a1a;
+  }
+
+  .format-label {
+    color: #999;
+  }
+
+  .drop-zone {
+    border-color: #444;
+  }
+
+  .drop-zone.drag-over {
+    border-color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.1);
+  }
+
+  .drop-zone.drag-over .drop-message {
+    color: #60a5fa;
+  }
+
+  .drop-message {
+    color: #bbb;
+  }
+
+  .drop-zone.success .drop-message {
+    color: #4ade80;
+  }
+
+  .drop-zone.error .drop-message {
+    color: #f87171;
+  }
+
+  .hint {
+    color: #666;
+  }
+
+  .modal {
+    background: #2a2a2a;
+  }
+
+  .modal-hint {
+    color: #999;
+  }
+
+  .speaker-row input[type="text"] {
+    border-color: #444;
+    background: #1a1a1a;
+    color: #f6f6f6;
+  }
+
+  .speaker-row input[type="text"]:disabled {
+    background: #333;
+  }
+
+  .remove-checkbox {
+    color: #999;
+  }
+
+  .modal-actions button {
+    border-color: #444;
+    background: #3a3a3a;
+    color: #f6f6f6;
+  }
+
+  .modal-actions button:last-child {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .modal-actions button:last-child:hover {
+    background: #2563eb;
+  }
+}
