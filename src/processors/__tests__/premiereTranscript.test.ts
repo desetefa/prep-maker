@@ -2,10 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  processPremiereTranscript,
-  detectSpeakers,
-} from "../premiereTranscript";
+import { processPremiereTranscript, detectSpeakers } from "../premiereTranscript";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const fixturePath = join(__dirname, "fixtures", "carrie-sample.txt");

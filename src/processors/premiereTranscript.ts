@@ -7,6 +7,24 @@ const TIMECODE_LINE_REGEX = /^\d{2}:\d{2}:\d{2}:\d{2}\s*-\s*\d{2}:\d{2}:\d{2}:\d
 
 const SPEAKER_LINE_REGEX = /^Speaker\s+\d+$/i;
 
+/** One run of text, optionally hyperlinked (from Word or export) */
+export type TextSegment = { text: string; href?: string };
+
+/** A logical line: one or more segments (plain text uses a single segment) */
+export type TranscriptLine = TextSegment[];
+
+/** Input line: newline-split string from .txt, or rich segments from .docx */
+export type LineInput = string | TranscriptLine;
+
+export function plainLine(line: LineInput): string {
+  if (typeof line === "string") return line;
+  return line.map((s) => s.text).join("");
+}
+
+function normalizeLine(line: LineInput): TranscriptLine {
+  return typeof line === "string" ? [{ text: line }] : line;
+}
+
 export function detectSpeakers(content: string): string[] {
   const seen = new Set<string>();
   const speakers: string[] = [];
@@ -28,7 +46,7 @@ export type ProcessOptions = {
 export type TranscriptBlock = {
   speakerId: string;
   label: string;
-  lines: string[];
+  lines: TranscriptLine[];
 };
 
 function parseOptions(opts?: ProcessOptions | Record<string, string>): ProcessOptions {
@@ -44,21 +62,23 @@ function parseOptions(opts?: ProcessOptions | Record<string, string>): ProcessOp
 }
 
 export function processPremiereTranscriptToBlocks(
-  content: string,
+  content: string | LineInput[],
   options?: ProcessOptions | Record<string, string>,
 ): TranscriptBlock[] {
   const opts = parseOptions(options);
   const speakerRenames = opts.speakerRenames ?? {};
   const speakersToRemoveSet = new Set(opts.speakersToRemove ?? []);
 
-  let lines = content.split("\n");
-  lines = lines.filter((line) => !TIMECODE_LINE_REGEX.test(line.trim()));
+  const linesInput: LineInput[] =
+    typeof content === "string" ? content.split("\n") : content;
 
-  const collapsed: string[] = [];
+  let lines = linesInput.filter((line) => !TIMECODE_LINE_REGEX.test(plainLine(line).trim()));
+
+  const collapsed: LineInput[] = [];
   let lastSpeakerOriginal: string | null = null;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const trimmed = line.trim();
+    const trimmed = plainLine(line).trim();
     if (SPEAKER_LINE_REGEX.test(trimmed)) {
       if (trimmed === lastSpeakerOriginal) continue;
       lastSpeakerOriginal = trimmed;
@@ -68,17 +88,19 @@ export function processPremiereTranscriptToBlocks(
     }
   }
 
-  const merged: string[] = [];
+  const merged: LineInput[] = [];
   for (let i = 0; i < collapsed.length; i++) {
     const line = collapsed[i];
-    const trimmed = line.trim();
+    const trimmed = plainLine(line).trim();
     const isBlank = trimmed === "";
     const prev = merged[merged.length - 1];
+    const prevPlain = prev !== undefined ? plainLine(prev).trim() : "";
     const prevIsDialogue =
-      prev !== undefined && prev.trim() !== "" && !SPEAKER_LINE_REGEX.test(prev.trim());
+      prev !== undefined && prevPlain !== "" && !SPEAKER_LINE_REGEX.test(prevPlain);
     const next = collapsed[i + 1];
+    const nextPlain = next !== undefined ? plainLine(next).trim() : "";
     const nextIsDialogue =
-      next !== undefined && next.trim() !== "" && !SPEAKER_LINE_REGEX.test(next.trim());
+      next !== undefined && nextPlain !== "" && !SPEAKER_LINE_REGEX.test(nextPlain);
     if (isBlank && prevIsDialogue && nextIsDialogue) continue;
     merged.push(line);
   }
@@ -88,7 +110,7 @@ export function processPremiereTranscriptToBlocks(
 
   for (let i = 0; i < merged.length; i++) {
     const line = merged[i];
-    const trimmed = line.trim();
+    const trimmed = plainLine(line).trim();
 
     if (SPEAKER_LINE_REGEX.test(trimmed)) {
       const removed = speakersToRemoveSet.has(trimmed);
@@ -113,7 +135,7 @@ export function processPremiereTranscriptToBlocks(
         blocks.push(orphan);
         current = orphan;
       }
-      current.lines.push(line);
+      current.lines.push(normalizeLine(line));
     }
   }
 
@@ -127,7 +149,8 @@ export function processPremiereTranscript(
   const blocks = processPremiereTranscriptToBlocks(content, options);
   const blockStrings = blocks.map((b) => {
     const head = b.label ? b.label + "\n" : "";
-    return head + b.lines.join("\n");
+    const body = b.lines.map((line) => line.map((s) => s.text).join("")).join("\n");
+    return head + body;
   });
   return blockStrings.join("\n\n");
 }

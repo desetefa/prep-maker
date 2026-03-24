@@ -34,6 +34,29 @@ h1 {
   margin: 0 0 1.5rem 0;
 }
 
+.output-format-row {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.output-format-row label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.output-format-row select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: #fff;
+  cursor: pointer;
+}
+
 .drop-zone {
   width: 100%;
   max-width: 360px;
@@ -141,11 +164,18 @@ h1 {
   font-weight: 500;
 }
 
-.meta-row input {
+.meta-row input,
+.meta-row select {
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 0.9rem;
+  background: #fff;
+}
+
+.meta-row select {
+  cursor: pointer;
+  min-width: 100%;
 }
 
 .speaker-inputs {
@@ -222,6 +252,12 @@ h1 {
 
   .format-label {
     color: #999;
+  }
+
+  .output-format-row select {
+    border-color: #444;
+    background: #1a1a1a;
+    color: #f6f6f6;
   }
 
   .drop-zone {
