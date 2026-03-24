@@ -15,7 +15,6 @@ A Mac app that strips timecodes from Premiere-style transcripts. Drag a transcri
 2. Install dependencies and run:
 
 ```bash
-cd prep-maker
 npm install
 npm run tauri dev
 ```
@@ -37,7 +36,7 @@ npm run test
 ## Project Structure
 
 ```
-prep-maker/
+./
 ├── src/
 │   ├── App.tsx              # Main UI with drop zone
 │   ├── processors/

@@ -31,6 +31,8 @@ src-tauri/gen/
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# macOS
 .DS_Store
 *.suo
 *.ntvs*
